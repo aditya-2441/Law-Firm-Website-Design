@@ -41,7 +41,8 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
             <div className="bg-amber-500 p-2 rounded">
               <Scale className="w-6 h-6 text-slate-900" />
             </div>
-            <span className="text-xl font-bold text-white">LegalConnect</span>
+            <span className="text-xl font-bold text-white">NyayMitra
+            </span>
           </div>
 
           {/* Desktop Navigation */}
