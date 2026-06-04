@@ -23,11 +23,15 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
     if (userType === "client") {
       navigate("/client");
     } else if (userType === "lawyer") {
-      navigate("/lawyer");
+      navigate("/lawyer/dashboard");
     } else if (userType === "admin") {
       navigate("/admin");
     }
   };
+
+  // Determine where "Home" should go based on user type
+  const isLawyerLoggedIn = isAuthenticated && userType === "lawyer";
+  const homeRoute = isLawyerLoggedIn ? "/lawyer" : "/";
 
   return (
     <nav className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
@@ -35,30 +39,36 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div
-            onClick={() => navigate("/")}
+            onClick={() => navigate(homeRoute)}
             className="flex items-center gap-2 cursor-pointer"
           >
             <div className="bg-amber-500 p-2 rounded">
               <Scale className="w-6 h-6 text-slate-900" />
             </div>
-            <span className="text-xl font-bold text-white">NyayMitra
-            </span>
+            <span className="text-xl font-bold text-white">NyayMitra</span>
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <button
-              onClick={() => navigate("/")}
+              onClick={() => navigate(homeRoute)}
               className="text-slate-300 hover:text-amber-500 transition-colors"
             >
               Home
             </button>
-            <button className="text-slate-300 hover:text-amber-500 transition-colors">
-              Services
-            </button>
-            <button className="text-slate-300 hover:text-amber-500 transition-colors">
-              How It Works
-            </button>
+            
+            {/* Hide these links if a lawyer is logged in */}
+            {!isLawyerLoggedIn && (
+              <>
+                <button className="text-slate-300 hover:text-amber-500 transition-colors">
+                  Services
+                </button>
+                <button className="text-slate-300 hover:text-amber-500 transition-colors">
+                  How It Works
+                </button>
+              </>
+            )}
+
             <button className="text-slate-300 hover:text-amber-500 transition-colors">
               Contact
             </button>
@@ -115,19 +125,26 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
           <div className="md:hidden mt-4 pb-4 space-y-3">
             <button
               onClick={() => {
-                navigate("/");
+                navigate(homeRoute);
                 setMobileMenuOpen(false);
               }}
               className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
             >
               Home
             </button>
-            <button className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2">
-              Services
-            </button>
-            <button className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2">
-              How It Works
-            </button>
+
+            {/* Hide these links if a lawyer is logged in */}
+            {!isLawyerLoggedIn && (
+              <>
+                <button className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2">
+                  Services
+                </button>
+                <button className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2">
+                  How It Works
+                </button>
+              </>
+            )}
+
             <button className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2">
               Contact
             </button>

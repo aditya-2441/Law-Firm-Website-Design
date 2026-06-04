@@ -6,6 +6,7 @@ import { Conversations } from "./pages/Conversations";
 import { Home } from "./pages/Home";
 import { Login } from "./pages/Login";
 import { SignUp } from "./pages/SignUp";
+import { LawyerLanding } from "./pages/LawyerLanding";
 
 export const router = createBrowserRouter([
   {
@@ -26,7 +27,11 @@ export const router = createBrowserRouter([
   },
   {
     path: "/lawyer",
-    Component: LawyerDashboard,
+    element: <LawyerLanding />,
+  },
+  {
+    path: "/lawyer/dashboard",
+    element: <LawyerDashboard />,
   },
   {
     path: "/admin",
