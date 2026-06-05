@@ -115,7 +115,7 @@ export function SignUp() {
             <div className="bg-amber-500 p-3 rounded">
               <Scale className="w-8 h-8 text-slate-900" />
             </div>
-            <span className="text-3xl font-bold text-white">LegalConnect</span>
+            <span className="text-3xl font-bold text-white">NyayMitra</span>
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">
             {step === "details" ? "Create Your Account" : "Verify Your Phone"}

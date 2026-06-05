@@ -1,5 +1,5 @@
 import { createBrowserRouter } from "react-router";
-import { ClientLanding } from "./pages/ClientLanding";
+import { ClientDashboard } from "./pages/ClientDashboard";
 import { LawyerDashboard } from "./pages/LawyerDashboard";
 import { AdminDashboard } from "./pages/AdminDashboard";
 import { Conversations } from "./pages/Conversations";
@@ -22,10 +22,6 @@ export const router = createBrowserRouter([
     Component: SignUp,
   },
   {
-    path: "/client",
-    Component: ClientLanding,
-  },
-  {
     path: "/lawyer",
     element: <LawyerLanding />,
   },
@@ -37,8 +33,13 @@ export const router = createBrowserRouter([
     path: "/admin",
     Component: AdminDashboard,
   },
+  // Inside your routes array:
   {
     path: "/conversations",
-    Component: Conversations,
+    element: <Conversations />,
   },
+  {
+  path: "/client",
+  element: <ClientDashboard />,
+},
 ]);

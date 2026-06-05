@@ -44,8 +44,14 @@ export function Login() {
     console.log(`Verifying 2FA OTP ${otp} for user type: ${userType}`);
 
     if (userType === "client") {
-      navigate("/client");
+      // Save session to browser storage so Navbar detects login
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userType", "client");
+      navigate("/");
     } else if (userType === "lawyer") {
+      // Save session to browser storage so Navbar detects login
+      localStorage.setItem("isAuthenticated", "true");
+      localStorage.setItem("userType", "lawyer");
       navigate("/lawyer");
     }
   };
@@ -84,7 +90,7 @@ export function Login() {
             <div className="bg-amber-500 p-3 rounded">
               <Scale className="w-8 h-8 text-slate-900" />
             </div>
-            <span className="text-3xl font-bold text-white">LegalConnect</span>
+            <span className="text-3xl font-bold text-white">NyayMitra</span>
           </div>
           <h2 className="text-2xl font-bold text-white mb-2">
             {step === "credentials" ? "Welcome Back" : "Security Verification"}

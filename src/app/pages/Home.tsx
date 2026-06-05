@@ -16,10 +16,19 @@ import {
 } from "lucide-react";
 import { Navbar } from "../components/Navbar";
 import { ChatbotWidget } from "../components/ChatbotWidget";
-import { ImageWithFallback } from "../components/figma/ImageWithFallback";
 
 export function Home() {
   const navigate = useNavigate();
+  
+  // 1. Check local storage on initial load to see if they are logged in
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return localStorage.getItem("isAuthenticated") === "true";
+  });
+  
+  const [userType, setUserType] = useState<"client" | "lawyer" | "admin" | null>(() => {
+    return localStorage.getItem("userType") as "client" | "lawyer" | "admin" | null;
+  });
+
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -39,7 +48,17 @@ export function Home() {
 
   return (
     <div className="min-h-screen bg-slate-950">
-      <Navbar />
+      {/* 2. Pass state and a comprehensive logout function to the Navbar */}
+      <Navbar 
+        isAuthenticated={isAuthenticated} 
+        userType={userType} 
+        onLogout={() => {
+          setIsAuthenticated(false);
+          setUserType(null);
+          localStorage.removeItem("isAuthenticated");
+          localStorage.removeItem("userType");
+        }} 
+      />
       <ChatbotWidget />
 
       {/* Hero Section with Background Image */}
@@ -140,7 +159,6 @@ export function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Divorce & Family Law */}
             <div
               className="relative h-80 rounded-lg overflow-hidden group cursor-pointer"
               style={{
@@ -165,7 +183,6 @@ export function Home() {
               </div>
             </div>
 
-            {/* Traffic Violation */}
             <div
               className="relative h-80 rounded-lg overflow-hidden group cursor-pointer"
               style={{
@@ -190,7 +207,6 @@ export function Home() {
               </div>
             </div>
 
-            {/* Family Disputes */}
             <div
               className="relative h-80 rounded-lg overflow-hidden group cursor-pointer"
               style={{
@@ -215,7 +231,6 @@ export function Home() {
               </div>
             </div>
 
-            {/* General Legal Help */}
             <div
               className="relative h-80 rounded-lg overflow-hidden group cursor-pointer"
               style={{
