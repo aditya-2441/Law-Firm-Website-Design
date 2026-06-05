@@ -1,6 +1,17 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router";
-import { Scale, User, LogOut, Menu, X } from "lucide-react";
+import { 
+  Scale, 
+  User, 
+  LogOut, 
+  Menu, 
+  X, 
+  MessageSquare,
+  Home,
+  Briefcase,
+  HelpCircle,
+  Phone
+} from "lucide-react";
 
 interface NavbarProps {
   isAuthenticated?: boolean;
@@ -62,7 +73,8 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
     <nav className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
-          {/* Logo */}
+          
+          {/* Logo (Stays on the far left) */}
           <div
             onClick={() => handleNavClick("home")}
             className="flex items-center gap-2 cursor-pointer"
@@ -73,76 +85,93 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
             <span className="text-xl font-bold text-white">NyayMitra</span>
           </div>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center gap-8">
-            <button
-              onClick={() => handleNavClick("home")}
-              className="text-slate-300 hover:text-amber-500 transition-colors"
-            >
-              Home
-            </button>
+          {/* RIGHT SIDE GROUP: Navigation + Auth Buttons */}
+          <div className="hidden md:flex items-center gap-10">
             
-            {/* Hide these links if a lawyer is logged in */}
-            {!isLawyerLoggedIn && (
-              <>
-                <button 
-                  onClick={() => handleNavClick("services")}
-                  className="text-slate-300 hover:text-amber-500 transition-colors"
-                >
-                  Services
-                </button>
-                <button 
-                  onClick={() => handleNavClick("how-it-works")}
-                  className="text-slate-300 hover:text-amber-500 transition-colors"
-                >
-                  How It Works
-                </button>
-              </>
-            )}
+            {/* Desktop Navigation Links */}
+            <div className="flex items-center gap-8">
+              <button
+                onClick={() => handleNavClick("home")}
+                className="flex items-center gap-2 text-slate-300 hover:text-amber-500 transition-colors font-medium"
+              >
+                <Home className="w-5 h-5" />
+                Home
+              </button>
+              
+              {/* Hide these links if a lawyer is logged in */}
+              {!isLawyerLoggedIn && (
+                <>
+                  <button 
+                    onClick={() => handleNavClick("services")}
+                    className="flex items-center gap-2 text-slate-300 hover:text-amber-500 transition-colors font-medium"
+                  >
+                    <Briefcase className="w-5 h-5" />
+                    Services
+                  </button>
+                  <button 
+                    onClick={() => handleNavClick("how-it-works")}
+                    className="flex items-center gap-2 text-slate-300 hover:text-amber-500 transition-colors font-medium"
+                  >
+                    <HelpCircle className="w-5 h-5" />
+                    How It Works
+                  </button>
+                </>
+              )}
 
-            <button 
-              onClick={() => handleNavClick("contact")}
-              className="text-slate-300 hover:text-amber-500 transition-colors"
-            >
-              Contact
-            </button>
-          </div>
+              <button 
+                onClick={() => handleNavClick("contact")}
+                className="flex items-center gap-2 text-slate-300 hover:text-amber-500 transition-colors font-medium"
+              >
+                <Phone className="w-5 h-5" />
+                Contact
+              </button>
+            </div>
 
-          {/* Auth Buttons */}
-          <div className="hidden md:flex items-center gap-4">
-            {!isAuthenticated ? (
-              <>
-                <button
-                  onClick={() => navigate("/login")}
-                  className="text-slate-300 hover:text-white transition-colors"
-                >
-                  Log In
-                </button>
-                <button
-                  onClick={() => navigate("/signup")}
-                  className="bg-amber-500 text-slate-900 px-6 py-2 rounded-lg hover:bg-amber-600 transition-colors font-semibold"
-                >
-                  Sign Up
-                </button>
-              </>
-            ) : (
-              <>
-                <button
-                  onClick={handleProfileClick}
-                  className="flex items-center gap-2 text-slate-300 hover:text-amber-500 transition-colors"
-                >
-                  <User className="w-5 h-5" />
-                  Profile
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-2 text-slate-300 hover:text-amber-500 transition-colors"
-                >
-                  <LogOut className="w-5 h-5" />
-                  Logout
-                </button>
-              </>
-            )}
+            {/* Auth Buttons */}
+            <div className="flex items-center gap-6">
+              {!isAuthenticated ? (
+                <>
+                  <button
+                    onClick={() => navigate("/login")}
+                    className="flex items-center gap-2 text-slate-300 hover:text-white transition-colors font-medium"
+                  >
+                    <User className="w-5 h-5" />
+                    Log In
+                  </button>
+                  <button
+                    onClick={() => navigate("/signup")}
+                    className="bg-amber-500 text-slate-900 px-6 py-2 rounded-lg hover:bg-amber-600 transition-colors font-semibold"
+                  >
+                    Sign Up
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={() => navigate("/conversations")}
+                    className="flex items-center gap-2 text-slate-300 hover:text-amber-500 transition-colors font-medium"
+                  >
+                    <MessageSquare className="w-5 h-5" />
+                    Messages
+                  </button>
+                  <button
+                    onClick={handleProfileClick}
+                    className="flex items-center gap-2 text-slate-300 hover:text-amber-500 transition-colors font-medium"
+                  >
+                    <User className="w-5 h-5" />
+                    Profile
+                  </button>
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center gap-2 text-slate-300 hover:text-amber-500 transition-colors font-medium"
+                  >
+                    <LogOut className="w-5 h-5" />
+                    Logout
+                  </button>
+                </>
+              )}
+            </div>
+
           </div>
 
           {/* Mobile Menu Button */}
@@ -159,8 +188,9 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
           <div className="md:hidden mt-4 pb-4 space-y-3">
             <button
               onClick={() => handleNavClick("home")}
-              className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
+              className="flex items-center gap-2 w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2 font-medium"
             >
+              <Home className="w-5 h-5" />
               Home
             </button>
 
@@ -169,14 +199,16 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
               <>
                 <button 
                   onClick={() => handleNavClick("services")}
-                  className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
+                  className="flex items-center gap-2 w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2 font-medium"
                 >
+                  <Briefcase className="w-5 h-5" />
                   Services
                 </button>
                 <button 
                   onClick={() => handleNavClick("how-it-works")}
-                  className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
+                  className="flex items-center gap-2 w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2 font-medium"
                 >
+                  <HelpCircle className="w-5 h-5" />
                   How It Works
                 </button>
               </>
@@ -184,8 +216,9 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
 
             <button 
               onClick={() => handleNavClick("contact")}
-              className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
+              className="flex items-center gap-2 w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2 font-medium"
             >
+              <Phone className="w-5 h-5" />
               Contact
             </button>
             <div className="border-t border-slate-700 pt-3 mt-3">
@@ -196,8 +229,9 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
                       navigate("/login");
                       setMobileMenuOpen(false);
                     }}
-                    className="block w-full text-left text-slate-300 hover:text-white transition-colors py-2"
+                    className="flex items-center gap-2 w-full text-left text-slate-300 hover:text-white transition-colors py-2 font-medium"
                   >
+                    <User className="w-5 h-5" />
                     Log In
                   </button>
                   <button
@@ -214,11 +248,22 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
                 <>
                   <button
                     onClick={() => {
+                      navigate("/conversations");
+                      setMobileMenuOpen(false);
+                    }}
+                    className="flex items-center gap-2 w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2 font-medium"
+                  >
+                    <MessageSquare className="w-5 h-5" />
+                    Messages
+                  </button>
+                  <button
+                    onClick={() => {
                       handleProfileClick();
                       setMobileMenuOpen(false);
                     }}
-                    className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
+                    className="flex items-center gap-2 w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2 font-medium"
                   >
+                    <User className="w-5 h-5" />
                     Profile
                   </button>
                   <button
@@ -226,8 +271,9 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
                       handleLogout();
                       setMobileMenuOpen(false);
                     }}
-                    className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
+                    className="flex items-center gap-2 w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2 font-medium"
                   >
+                    <LogOut className="w-5 h-5" />
                     Logout
                   </button>
                 </>
