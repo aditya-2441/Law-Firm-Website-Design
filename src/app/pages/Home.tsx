@@ -1,5 +1,5 @@
-import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useNavigate, useLocation } from "react-router";
+import { useState, useEffect } from "react";
 import {
   Scale,
   ArrowRight,
@@ -19,6 +19,7 @@ import { ChatbotWidget } from "../components/ChatbotWidget";
 
 export function Home() {
   const navigate = useNavigate();
+  const location = useLocation();
   
   // 1. Check local storage on initial load to see if they are logged in
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
@@ -35,6 +36,21 @@ export function Home() {
     service: "",
     description: "",
   });
+
+  // Handle auto-scrolling when navigating from other pages via the Navbar
+  useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      const element = document.getElementById(location.state.scrollTo);
+      if (element) {
+        // Slight delay ensures the page finishes rendering before scrolling
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      }
+      // Clean up the history state so it doesn't try to scroll again if the user simply refreshes the page
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -145,7 +161,7 @@ export function Home() {
       </section>
 
       {/* Legal Help You Can Trust */}
-      <section className="py-20 bg-slate-950">
+      <section id="services" className="py-20 bg-slate-950">
         <div className="container mx-auto px-6">
           <div className="mb-12">
             <p className="text-amber-500 mb-2 uppercase tracking-wide text-sm">
@@ -351,7 +367,7 @@ export function Home() {
       </section>
 
       {/* Three Steps */}
-      <section className="py-20 bg-slate-950">
+      <section id="how-it-works" className="py-20 bg-slate-950">
         <div className="container mx-auto px-6">
           <div className="text-center mb-12">
             <p className="text-amber-500 mb-2 uppercase tracking-wide text-sm">
@@ -521,7 +537,7 @@ export function Home() {
       </section>
 
       {/* Consultation Form */}
-      <section className="py-20 bg-slate-950">
+      <section id="contact" className="py-20 bg-slate-950">
         <div className="container mx-auto px-6">
           <div className="grid md:grid-cols-2 gap-16">
             <div>

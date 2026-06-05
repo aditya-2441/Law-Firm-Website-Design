@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { Scale, User, LogOut, Menu, X } from "lucide-react";
 
 interface NavbarProps {
@@ -10,6 +10,7 @@ interface NavbarProps {
 
 export function Navbar({ isAuthenticated = false, userType = null, onLogout }: NavbarProps) {
   const navigate = useNavigate();
+  const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const handleLogout = () => {
@@ -33,13 +34,37 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
   const isLawyerLoggedIn = isAuthenticated && userType === "lawyer";
   const homeRoute = isLawyerLoggedIn ? "/lawyer" : "/";
 
+  // Smart Navigation Handler
+  const handleNavClick = (target: string) => {
+    setMobileMenuOpen(false);
+
+    // Handle clicking Home or Logo
+    if (target === "home") {
+      if (location.pathname === homeRoute) {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        navigate(homeRoute);
+      }
+      return;
+    }
+
+    // Handle clicking Services, How It Works, or Contact
+    if (location.pathname === "/") {
+      // If already on Home page, just scroll smoothly
+      document.getElementById(target)?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      // If on another page, route to Home and pass the target ID in the state
+      navigate("/", { state: { scrollTo: target } });
+    }
+  };
+
   return (
     <nav className="bg-slate-900 border-b border-slate-800 sticky top-0 z-40">
       <div className="container mx-auto px-6 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div
-            onClick={() => navigate(homeRoute)}
+            onClick={() => handleNavClick("home")}
             className="flex items-center gap-2 cursor-pointer"
           >
             <div className="bg-amber-500 p-2 rounded">
@@ -51,7 +76,7 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             <button
-              onClick={() => navigate(homeRoute)}
+              onClick={() => handleNavClick("home")}
               className="text-slate-300 hover:text-amber-500 transition-colors"
             >
               Home
@@ -60,16 +85,25 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
             {/* Hide these links if a lawyer is logged in */}
             {!isLawyerLoggedIn && (
               <>
-                <button className="text-slate-300 hover:text-amber-500 transition-colors">
+                <button 
+                  onClick={() => handleNavClick("services")}
+                  className="text-slate-300 hover:text-amber-500 transition-colors"
+                >
                   Services
                 </button>
-                <button className="text-slate-300 hover:text-amber-500 transition-colors">
+                <button 
+                  onClick={() => handleNavClick("how-it-works")}
+                  className="text-slate-300 hover:text-amber-500 transition-colors"
+                >
                   How It Works
                 </button>
               </>
             )}
 
-            <button className="text-slate-300 hover:text-amber-500 transition-colors">
+            <button 
+              onClick={() => handleNavClick("contact")}
+              className="text-slate-300 hover:text-amber-500 transition-colors"
+            >
               Contact
             </button>
           </div>
@@ -124,10 +158,7 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
         {mobileMenuOpen && (
           <div className="md:hidden mt-4 pb-4 space-y-3">
             <button
-              onClick={() => {
-                navigate(homeRoute);
-                setMobileMenuOpen(false);
-              }}
+              onClick={() => handleNavClick("home")}
               className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
             >
               Home
@@ -136,16 +167,25 @@ export function Navbar({ isAuthenticated = false, userType = null, onLogout }: N
             {/* Hide these links if a lawyer is logged in */}
             {!isLawyerLoggedIn && (
               <>
-                <button className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2">
+                <button 
+                  onClick={() => handleNavClick("services")}
+                  className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
+                >
                   Services
                 </button>
-                <button className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2">
+                <button 
+                  onClick={() => handleNavClick("how-it-works")}
+                  className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
+                >
                   How It Works
                 </button>
               </>
             )}
 
-            <button className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2">
+            <button 
+              onClick={() => handleNavClick("contact")}
+              className="block w-full text-left text-slate-300 hover:text-amber-500 transition-colors py-2"
+            >
               Contact
             </button>
             <div className="border-t border-slate-700 pt-3 mt-3">
