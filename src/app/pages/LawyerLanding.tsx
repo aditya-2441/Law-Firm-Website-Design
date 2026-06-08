@@ -26,7 +26,7 @@ export function LawyerLanding() {
   const navigate = useNavigate();
   
   // Verification States
-  const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>("unverified");
+  const [verificationStatus, setVerificationStatus] = useState<VerificationStatus>("verified");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   // Form states for file uploads

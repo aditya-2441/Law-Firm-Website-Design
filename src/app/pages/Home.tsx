@@ -17,11 +17,57 @@ import {
 import { Navbar } from "../components/Navbar";
 import { ChatbotWidget } from "../components/ChatbotWidget";
 
+// Mapping of primary services to their specific sub-services
+const subServicesMap: Record<string, { value: string; label: string }[]> = {
+  divorce: [
+    { value: "mutual", label: "Mutual Consent Divorce" },
+    { value: "contested", label: "Contested Divorce" },
+    { value: "custody", label: "Child Custody & Visitation" },
+    { value: "alimony", label: "Alimony & Maintenance" },
+  ],
+  family: [
+    { value: "prenup", label: "Prenuptial / Postnuptial Agreements" },
+    { value: "dv", label: "Domestic Violence (DV) Act" },
+    { value: "restitution", label: "Restitution of Conjugal Rights" },
+    { value: "succession", label: "Succession, Wills & Inheritance" },
+  ],
+  traffic: [
+    { value: "challan", label: "E-Challan Settlement" },
+    { value: "dui", label: "Drunk Driving (DUI / DWI)" },
+    { value: "license", label: "License Suspension / Revocation" },
+    { value: "mact", label: "Motor Accident Claims (MACT)" },
+  ],
+  property: [
+    { value: "rera", label: "RERA (Real Estate Regulatory Authority)" },
+    { value: "title", label: "Title & Ownership Disputes" },
+    { value: "tenant", label: "Landlord-Tenant Disputes" },
+    { value: "possession", label: "Illegal Possession / Eviction" },
+  ],
+  consumer: [
+    { value: "defective", label: "Defective Products / Services" },
+    { value: "fraud", label: "E-commerce Fraud" },
+    { value: "medical", label: "Medical Negligence" },
+    { value: "insurance", label: "Insurance Claim Rejection" },
+  ],
+  arbitration: [
+    { value: "commercial", label: "Commercial Arbitration" },
+    { value: "mediation", label: "Mediation Services" },
+    { value: "conciliation", label: "Conciliation" },
+    { value: "corporate", label: "Corporate Dispute Resolution" },
+  ],
+  other: [
+    { value: "general", label: "General Legal Consultation" },
+    { value: "criminal", label: "Criminal Defense" },
+    { value: "civil", label: "Civil Suit" },
+    { value: "startup", label: "Startup & Corporate Law" },
+  ],
+};
+
 export function Home() {
   const navigate = useNavigate();
   const location = useLocation();
   
-  // 1. Check local storage on initial load to see if they are logged in
+  // Check local storage on initial load to see if they are logged in
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return localStorage.getItem("isAuthenticated") === "true";
   });
@@ -30,10 +76,12 @@ export function Home() {
     return localStorage.getItem("userType") as "client" | "lawyer" | "admin" | null;
   });
 
+  // Added subService to formData
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
     service: "",
+    subService: "",
     description: "",
   });
 
@@ -42,12 +90,10 @@ export function Home() {
     if (location.state && location.state.scrollTo) {
       const element = document.getElementById(location.state.scrollTo);
       if (element) {
-        // Slight delay ensures the page finishes rendering before scrolling
         setTimeout(() => {
           element.scrollIntoView({ behavior: "smooth" });
         }, 100);
       }
-      // Clean up the history state so it doesn't try to scroll again if the user simply refreshes the page
       window.history.replaceState({}, document.title);
     }
   }, [location]);
@@ -55,16 +101,22 @@ export function Home() {
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     alert("Consultation request submitted!");
-    setFormData({ fullName: "", phone: "", service: "", description: "" });
+    setFormData({ fullName: "", phone: "", service: "", subService: "", description: "" });
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    if (name === "service") {
+      // If the primary service changes, clear out the previously selected sub-service
+      setFormData({ ...formData, service: value, subService: "" });
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   return (
     <div className="min-h-screen bg-slate-950">
-      {/* 2. Pass state and a comprehensive logout function to the Navbar */}
       <Navbar 
         isAuthenticated={isAuthenticated} 
         userType={userType} 
@@ -77,7 +129,7 @@ export function Home() {
       />
       <ChatbotWidget />
 
-      {/* Hero Section with Background Image */}
+      {/* Hero Section */}
       <section
         className="relative py-32 bg-cover bg-center"
         style={{
@@ -618,6 +670,8 @@ export function Home() {
                     className="w-full px-4 py-3 bg-slate-800 border border-slate-700 rounded text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   />
                 </div>
+                
+                {/* Primary Service Type Dropdown */}
                 <div>
                   <label className="block text-slate-300 mb-2">
                     SERVICE TYPE - सेवा प्रकार <span className="text-red-500">*</span>
@@ -631,13 +685,38 @@ export function Home() {
                   >
                     <option value="">Select a service - सेवा चुनें</option>
                     <option value="divorce">Divorce & Family Law</option>
-                    <option value="traffic">Traffic Violation</option>
                     <option value="family">Family Disputes</option>
                     <option value="property">Property Disputes</option>
+                    <option value="traffic">Traffic Violation</option>
                     <option value="consumer">Consumer Rights</option>
+                    <option value="arbitration">Arbitration & Mediation</option>
                     <option value="other">Other Legal Help</option>
                   </select>
                 </div>
+
+                {/* Conditional Sub-Service Dropdown */}
+                {formData.service && subServicesMap[formData.service] && (
+                  <div className="animate-in fade-in slide-in-from-top-2 duration-300">
+                    <label className="block text-slate-300 mb-2">
+                      SPECIFIC REQUIREMENT - विशिष्ट आवश्यकता <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      name="subService"
+                      value={formData.subService}
+                      onChange={handleInputChange}
+                      required
+                      className="w-full px-4 py-3 bg-slate-800 border border-amber-500/50 rounded text-white focus:outline-none focus:ring-2 focus:ring-amber-500"
+                    >
+                      <option value="">Select specific issue - विशिष्ट समस्या चुनें</option>
+                      {subServicesMap[formData.service].map((sub) => (
+                        <option key={sub.value} value={sub.value}>
+                          {sub.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                )}
+
                 <div>
                   <label className="block text-slate-300 mb-2">
                     BRIEF DESCRIPTION - संक्षिप्त विवरण
